@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
  
 class User extends Authenticatable
@@ -69,5 +70,17 @@ class User extends Authenticatable
 
     public function socials(): HasMany {
         return $this->hasMany(Social::class);
+    }
+
+    public function ict_inventories(): HasOne {
+        return $this->hasOne(IctInventory::class);
+    }
+
+    public function employees(): HasOne {
+        return $this->hasOne(employee::class);
+    }
+
+    public function locations(): HasOne {
+        return $this->hasOne(Location::class);
     }
 }

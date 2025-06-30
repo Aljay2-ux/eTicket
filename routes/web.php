@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SocialController;
+use App\Models\IctInventory;
+use App\Models\IctServiceRequestType;
+use App\Models\RequestForm;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
@@ -23,7 +26,7 @@ use App\Http\Controllers\SocialController;
 Route::get('/auth/{provider}/redirect', [SocialController::class, 'redirect'])
     ->where('provider', 'google');
 
-Route::post('/auth/{provider}/callback', [SocialController::class, 'callback'])
+Route::get('/auth/{provider}/callback', [SocialController::class, 'callback'])
     ->where('provider', 'google');
 
 //     Route::get('/request/defect', [RequestController::class, 'create']);
@@ -117,7 +120,20 @@ Route::get('/users' ,function(){
 });
 
 Route::get('/request' ,function(){
-        return Inertia::render('Request/RequestForm');
+        return Inertia::render('Request/RequestForm',[
+            'assets' => IctInventory::get()->map(
+                function ($inner){
+                    return [
+                        'code' => $inner -> code,
+                        'equipment_type' => $inner -> ict_equipment_type -> name,
+                        'date_acquired' => $inner -> date_acquired,
+                        'id' => $inner -> id,
+                    ];
+                }
+            ),
+            
+            
+        ]);
 });
 
 Route::get('/profile' ,function(){
@@ -128,11 +144,25 @@ Route::get('/status' ,function(){
         return Inertia::render('Status');
 });
 
-Route::get('/request/defect' ,function(){
-        return Inertia::render('Request/Defect');
+Route::get('/request/defect' ,function(Request $request){
+    
+        return Inertia::render('Request/Defect',[
+            'assets' => IctInventory::where("id", $request->input("asset_id")  ) ->get()->map(
+                function ($inner){
+                    return [
+                        'code' => $inner ->  code,
+                        'equipment_type' => $inner -> ict_equipment_type -> name,
+                        'date_acquired' => $inner -> date_acquired,
+                        
+                    ];
+                }
+            ), 'request_types' => IctServiceRequestType::all(),
+            
+            
+        ]);
 });
 
-Route::get('/request/defect/date' ,function(){
+Route::get('/save_request' ,function(){
         return Inertia::render('Request/Date');
 });
 
@@ -140,14 +170,32 @@ Route::get('/request/defect/date/confirmation' ,function(){
         return Inertia::render('Request/Confirmation');
 });
 
-Route::post('/request/defect' ,function(){
+// Route::post('/request/defect' ,function(Request $request){
         
-    return redirect('/request/defect');
-});
+//     return redirect('/request/defect',[
+//             'assets' => IctInventory::get()->map(
+//                 function ($inner){
+//                     return [
+//                         'code' => $inner -> code,
+//                         'equipment_type' => $inner -> ict_equipment_type -> name,
+//                         'date_acquired' => $inner -> date_acquired,
+//                     ];
+//                 }
+//             ), 'asset_id'  => $request->input("asset_id"),
+            
+            
+//         ]);
+// });
 
-Route::post('/request/defect/date' ,function(){
+Route::post('/save_request' ,function(){
         
-    return redirect('/request/defect/date');
+    // $attribute = Request::validate([
+    //     'description' => 'required',
+    // ]);
+
+    // RequestForm::create($attribute);
+
+    // return redirect('/save_request');
 });
 
 Route::post('/request/defect/date/confirmation' ,function(){

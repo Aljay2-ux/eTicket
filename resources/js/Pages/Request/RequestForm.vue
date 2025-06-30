@@ -8,8 +8,10 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         router.post(route('logout'));
     }
 
-    let submit = () =>{
-      router.post('/request/defect');
+    let submit = (id) =>{
+      router.get('/request/defect',
+        {asset_id: id}
+      );
     }
 </script>
 <template>
@@ -37,7 +39,6 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
             <svg class="me-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
             </svg>
-            Home
           </a>
         </li>
         <li>
@@ -173,7 +174,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         </ul>
       </aside>
       <!-- Right content -->
-      <form @submit.prevent="submit" class="w-full space-y-6 lg:space-y-8">
+      <div class="w-full space-y-6 lg:space-y-8">
         <div class="space-y-6 sm:space-y-8">
           <ol class="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 sm:justify-center md:flex-row md:items-center lg:gap-6">
             <li class="flex items-center gap-2 md:flex-1 md:flex-col md:gap-1.5 lg:flex-none">
@@ -217,7 +218,38 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white">1. Select the product you want to repair:</h3>
 
           <div class="divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
-            <div class="flex items-center gap-8 p-6 sm:items-start lg:items-center">
+            <div class="flex items-center gap-8 p-6 sm:items-start lg:items-center" v-for="asset in props.assets" :key="asset.id">
+              <div>
+                <input id="product1" type="checkbox" value="" class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-700 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600" />
+                <label for="product1" class="sr-only"> Product 1 </label>
+              </div>
+
+              <div class="min-w-0 flex-1 gap-14 xl:flex xl:items-center">
+                <div class="min-w-0 max-w-xl flex-1 gap-6 sm:flex sm:items-center">
+                  <a  class="mb-4 flex aspect-square h-14 w-14 shrink-0 items-center sm:mb-0">
+                    <img class="h-auto max-h-full w-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
+                    <img class="hidden h-auto max-h-full w-full dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
+                  </a>
+                  <button @click="submit(asset.id)" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> {{ asset.equipment_type}}</button>
+                </div>
+
+                <div class="mt-4 flex shrink-0 flex-col gap-2 sm:flex-row sm:justify-between md:items-center xl:mt-0 xl:flex-col xl:items-start">
+                  <dl class="flex items-center gap-2.5">
+                    <dt class="text-base font-normal text-gray-500 dark:text-gray-400 xl:w-36">Property Number:</dt>
+                    <dd class="text-base font-normal text-gray-500 dark:text-gray-400">
+                      <a >{{ asset.code }}</a>
+                    </dd>
+                  </dl>
+
+                  <dl class="flex items-center gap-2.5">
+                    <dt class="text-base font-normal text-gray-500 dark:text-gray-400 xl:w-36">Aquisition Date:</dt>
+                    <dd class="text-base font-normal text-gray-500 dark:text-gray-400">{{ asset.date_acquired }}</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            
+            <!-- <div class="flex items-center gap-8 p-6 sm:items-start lg:items-center">
               <div>
                 <input id="product1" type="checkbox" value="" class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-700 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600" />
                 <label for="product1" class="sr-only"> Product 1 </label>
@@ -229,7 +261,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
                     <img class="h-auto max-h-full w-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
                     <img class="hidden h-auto max-h-full w-full dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
                   </a>
-                  <button type="submit" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> Computer Diagnosis/Repair</button>
+                  <button type="submit" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> </button>
                 </div>
 
                 <div class="mt-4 flex shrink-0 flex-col gap-2 sm:flex-row sm:justify-between md:items-center xl:mt-0 xl:flex-col xl:items-start">
@@ -370,7 +402,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
                   </dl>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
           
@@ -378,16 +410,16 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         <div class="flex justify-between">
 
           <!-- Previous Button -->
-          <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+          <button  class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
               Prev: Cancel
           </button>
 
         <!-- Next Button -->
-          <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+          <button class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                 Next: Defect reason
             </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </section>

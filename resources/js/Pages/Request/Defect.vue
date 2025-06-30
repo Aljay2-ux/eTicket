@@ -1,6 +1,8 @@
 <script setup>
 import MyLayout from '@/Layouts/MyLayout.vue';
 import { usePage} from '@inertiajs/vue3';
+import { reactive } from 'vue';
+
 const { props } = usePage();
 
 import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
@@ -9,8 +11,12 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
     }
 
     let submit = () => {
-        router.post('/request/defect/date');
+        router.post('/save_request', form);
     }
+
+    let form = reactive({
+      description: '',
+    });
 </script>
 <template>
     <MyLayout>
@@ -204,26 +210,22 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
           </ol>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-6" >
 
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">2. Tell us the defect:</h3>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white" >2. Tell us the defect:</h3>
           
-<form class="max-w-sm mx-auto">
+<form class="max-w-sm mx-auto"  >
   <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select your service requested</label>
   <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
-    <option>Computer Diagnosis/Repair</option>
-    <option>Software Installation</option>
-    <option>Hardware Installation</option>
-    <option>Repair Internet/Network connectivity</option>
-    <option>Printer Installation</option>
+    <option v-for="request_type in props.request_types" :key="request_type.id" :value="request_type.id">{{request_type.name}}</option>
   </select>
 </form>
 
           <p class="text-gray-700 text-normal">To be able to repair the product as quickly as possible,please tell us what exactly is not working with your gadget.</p>
         
         </div>
-         <div class="flex items-center gap-8 p-6 sm:items-start lg:items-center">
+         <div class="flex items-center gap-8 p-6 sm:items-start lg:items-center  " v-for="asset in props.assets" :key="asset.id" >
               
               <div class="min-w-0 flex-1 gap-14 xl:flex xl:items-center">
                 <div class="min-w-0 max-w-xl flex-1 gap-6 sm:flex sm:items-center">
@@ -231,14 +233,14 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
                     <img class="h-auto max-h-full w-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
                     <img class="hidden h-auto max-h-full w-full dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
                   </a>
-                  <a href="#" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> Computer Diagnosis/Repair</a>
+                  <a href="#" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> {{ asset.equipment_type}}</a>
                 </div>
 
                 <div class="mt-4 flex shrink-0 flex-col gap-2 sm:flex-row sm:justify-between md:items-center xl:mt-0 xl:flex-col xl:items-start">
                   <dl class="flex items-center gap-2.5">
                     <dt class="text-base font-normal text-gray-500 dark:text-gray-400 xl:w-36">Property Number:</dt>
                     <dd class="text-base font-normal text-gray-500 dark:text-gray-400">
-                      <a href="#" class="hover:underline">{{ props.auth.user.property_number }}</a>
+                      <a href="#" class="hover:underline">{{asset.code }}</a>
                     </dd>
                   </dl>
 
@@ -249,8 +251,10 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
                 </div>
               </div>
             </div>
+
             
-<form>
+            
+<form @submit.prevent="submit">
    <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
        <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-600 border-gray-200">
            <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
@@ -329,8 +333,8 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
            </div>
        </div>
        <div class="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-           <label for="editor" class="sr-only">Publish post</label>
-           <textarea id="editor" rows="8" class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write an article..." required ></textarea>
+           <label for="text" class="sr-only">Publish post</label>
+           <textarea id="text" rows="8" v-model="form.description" class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write an article..."  ></textarea>
        </div>
    </div>
    <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">

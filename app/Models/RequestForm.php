@@ -9,7 +9,7 @@ class RequestForm extends Model
 {
     use HasFactory;
 
-    protected $table = "request_forms";
+    
 
     protected $fillable = [
         'description',

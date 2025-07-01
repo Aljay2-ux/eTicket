@@ -83,4 +83,8 @@ class User extends Authenticatable
     public function locations(): HasOne {
         return $this->hasOne(Location::class);
     }
+
+    public function ict_service_request(): HasOne {
+        return $this->hasOne(IctServiceRequest::class);
+    }
 }

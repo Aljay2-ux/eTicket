@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\IctEquipmentType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Locale;
 
 class IctInventory extends Model
@@ -53,5 +54,9 @@ class IctInventory extends Model
 
     public function deleted_by(): BelongsTo {
         return $this->belongsto(User::class, 'deleted_by');
+    }
+
+    public function ict_service_request(): HasOne {
+        return $this->hasOne(IctServiceRequest::class);
     }
 }

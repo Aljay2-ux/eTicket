@@ -1,22 +1,30 @@
 <script setup>
 import MyLayout from '@/Layouts/MyLayout.vue';
-import { usePage} from '@inertiajs/vue3';
+import {  usePage } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 
 const { props } = usePage();
 
 import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
+
+
     const logout =()=> {
         router.post(route('logout'));
     }
 
-    let submit = () => {
-        router.post('/save_request', form);
-    }
+    const form = reactive({
+  description_of_request: '',
+  ict_service_request_type_id: null,
+  ict_inventory_id: props.asset_id,
+  requested_by: props.auth.user.username,
+});
 
-    let form = reactive({
-      description: '',
-    });
+// Function to submit the form
+function submit() {
+  router.post('/request/defect', form);
+}
+
+    
 </script>
 <template>
     <MyLayout>
@@ -209,18 +217,19 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
             </li>
           </ol>
         </div>
+<!-- stop -->
 
         <div class="space-y-6" >
 
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white" >2. Tell us the defect:</h3>
           
-<form class="max-w-sm mx-auto"  >
-  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select your service requested</label>
-  <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+  <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select your service requested</label>
+  <select v-model="form.ict_service_request_type_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
     <option v-for="request_type in props.request_types" :key="request_type.id" :value="request_type.id">{{request_type.name}}</option>
   </select>
-</form>
+
 
           <p class="text-gray-700 text-normal">To be able to repair the product as quickly as possible,please tell us what exactly is not working with your gadget.</p>
         
@@ -254,7 +263,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
 
             
             
-<form @submit.prevent="submit">
+
    <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
        <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-600 border-gray-200">
            <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
@@ -333,18 +342,15 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
            </div>
        </div>
        <div class="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-           <label for="text" class="sr-only">Publish post</label>
-           <textarea id="text" rows="8" v-model="form.description" class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write an article..."  ></textarea>
+           <label for="description_of_request" class="sr-only">Publish post</label>
+           <textarea id="description_of_request" v-model="form.description_of_request" rows="8"  class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write an article..."  ></textarea>
        </div>
    </div>
-   <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-       Publish post
-   </button>
 
    <div class="m-4">
       <span class="text-blue-900 font-bold"> You can include any specific symptoms, error messages, photos, or unusual behaviors you've noticed.</span>
    </div>
-</form>
+
 
 
     <div class="flex justify-between">
@@ -367,4 +373,69 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
 
 </MyLayout>
 </template>
+<!-- 
+<script setup>
+import MyLayout from '@/Layouts/MyLayout.vue';
+import { usePage } from '@inertiajs/vue3';
+import { reactive } from 'vue';
+import { router } from '@inertiajs/vue3';
 
+const { props } = usePage();
+
+const form = reactive({
+  description_of_request: '',
+  ict_service_request_type_id: null,
+});
+
+// Function to submit the form
+function submit() {
+  router.post('/request/defect', form);
+}
+</script>
+
+<template>
+  <MyLayout>
+    <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+      <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <h2 class="mb-4 text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl md:mb-6">Service Request Form</h2>
+        
+        <form @submit.prevent="submit" class="w-full space-y-6 lg:space-y-8">
+          <div>
+            <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select your service requested</label>
+            <select 
+              v-model="form.ict_service_request_type_id"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+            >
+              <option value="" disabled>Select a type</option>
+              <option v-for="request_type in props.request_types" :key="request_type.id" :value="request_type.id">
+                {{ request_type.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label for="description_of_request" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description of Request</label>
+            <textarea 
+              id="description_of_request" 
+              v-model="form.description_of_request" 
+              rows="4" 
+              class="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" 
+              placeholder="Describe your issue..." 
+              required
+            ></textarea>
+          </div>
+
+          <div class="flex justify-between">
+            <a href="/request" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+              Prev: Defect details
+            </a>
+            <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+              Next: Date and Time
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </MyLayout>
+</template> -->

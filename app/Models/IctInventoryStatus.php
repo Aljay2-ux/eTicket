@@ -27,4 +27,8 @@ class IctInventoryStatus extends Model
     public function deleted_by(): BelongsTo {
         return $this->belongsto(User::class, 'deleted_by');
     }
+
+    public function ict_service_request(): HasOne {
+        return $this->hasOne(IctServiceRequest::class);
+    }
 }

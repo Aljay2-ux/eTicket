@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IctServiceRequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -7,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\RequestFormController;
 use App\Http\Controllers\SocialController;
 use App\Models\IctInventory;
+use App\Models\IctServiceRequest;
 use App\Models\IctServiceRequestType;
 use App\Models\RequestForm;
 
@@ -128,6 +131,7 @@ Route::get('/request' ,function(){
                         'equipment_type' => $inner -> ict_equipment_type -> name,
                         'date_acquired' => $inner -> date_acquired,
                         'id' => $inner -> id,
+                        'serial_no' => $inner -> serial_no,
                     ];
                 }
             ),
@@ -154,16 +158,57 @@ Route::get('/request/defect' ,function(Request $request){
                         'equipment_type' => $inner -> ict_equipment_type -> name,
                         'date_acquired' => $inner -> date_acquired,
                         
+                        
                     ];
                 }
             ), 'request_types' => IctServiceRequestType::all(),
+                'asset_id' => $request->input("asset_id"),
+                'asset_name' => $request->input("asset_name"),
             
             
         ]);
 });
 
-Route::get('/save_request' ,function(){
-        return Inertia::render('Request/Date');
+// Route::get('/request/defect/date' ,function(Request $request){
+//         return Inertia::render('Request/Date',[
+//             'assets_id' => IctInventory::where("id", $request->input("asset_id")  ) ->get()->map(
+//                 function ($inner){
+//                     return [
+//                         'code' => $inner ->  code,
+//                         'equipment_type' => $inner -> ict_equipment_type -> name,
+//                         'date_requested' => $inner -> date_acquired,
+                        
+                        
+//                     ];
+//                 }
+//             ), 'request_types' => IctServiceRequestType::all(),
+//                 'asset_id' => $request->input("asset_id"),
+//                 // 'asset_name' => $request->input("asset_name"),
+            
+            
+//         ]);
+// });
+
+Route::get('/request/defect/date' ,function(Request $request){
+       return Inertia::render('Request/Date',[
+            'assets' => IctInventory::where("id", $request->input("asset_id")  ) ->get()->map(
+                function ($inner){
+                    return [
+                        'code' => $inner ->  code,
+                        'equipment_type' => $inner -> ict_equipment_type -> name,
+                        'date_acquired' => $inner -> date_acquired,
+                        
+                        
+                    ];
+                }
+            ), 'request_types' => IctServiceRequestType::all(),
+                'asset_id' => $request->input("asset_id"),
+                'asset_name' => $request->input("asset_name"),
+            
+            
+        ]);
+            
+            
 });
 
 Route::get('/request/defect/date/confirmation' ,function(){
@@ -217,3 +262,9 @@ Route::get('/try' ,function(){
 });
 
 Route::view('try','add_request');
+
+Route::post('/request/defect', [RequestFormController::class, 'store']);
+
+
+Route::post('/request/defect', [IctServiceRequestController::class, 'store']);
+Route::post('/request/defect/date', [IctServiceRequestController::class, 'store']);

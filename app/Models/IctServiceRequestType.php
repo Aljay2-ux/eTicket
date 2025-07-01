@@ -9,7 +9,11 @@ class IctServiceRequestType extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-    ];
+    protected $fillable = ['name'];
+
+    public function serviceRequests()
+    {
+        return $this->hasMany(IctServiceRequest::class, 'ict_service_request_type_id');
+    }
+
 }

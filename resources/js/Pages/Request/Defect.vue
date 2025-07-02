@@ -12,16 +12,23 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         router.post(route('logout'));
     }
 
+    const page = usePage ()
+
     const form = reactive({
   description_of_request: '',
-  ict_service_request_type_id: null,
+  ict_service_request_type_id: '',
   ict_inventory_id: props.asset_id,
   requested_by: props.auth.user.username,
 });
 
 // Function to submit the form
-function submit() {
-  router.post('/request/defect', form);
+ const submit_h1 = () =>{
+  router.get('/request/defect/date', {
+    description_of_request: form.description_of_request,
+   ict_service_request_type_id: form.ict_service_request_type_id,
+    asset_id: props.asset_id,
+    requested_by: props.auth.user.username
+  });
 }
 
     
@@ -179,7 +186,7 @@ function submit() {
         </ul>
       </aside>
       <!-- Right content -->
-      <form @submit.prevent="submit" class="w-full space-y-6 lg:space-y-8">
+      <div class="w-full space-y-6 lg:space-y-8">
         <div class="space-y-6 sm:space-y-8">
           <ol class="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 sm:justify-center md:flex-row md:items-center lg:gap-6">
             <li class="flex items-center gap-2 md:flex-1 md:flex-col md:gap-1.5 lg:flex-none">
@@ -360,12 +367,12 @@ function submit() {
       </a>
 
       <!-- Next Button -->
-    <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+    <button @click="submit_h1" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
         Next: Date and Time
     </button>
   </div>
 
-      </form>
+</div>
       
     </div>
   </div>

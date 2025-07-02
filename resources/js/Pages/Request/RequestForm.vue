@@ -8,7 +8,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         router.post(route('logout'));
     }
 
-    let submit = (id) =>{
+    let submit_h = (id) =>{
       router.get('/request/defect',
         {asset_id: id}
       );
@@ -30,7 +30,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
   </select>
 </form> -->
 
-    <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+    <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16"> 
   <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
     <nav class="mb-4 flex" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -230,7 +230,7 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
                     <img class="h-auto max-h-full w-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
                     <img class="hidden h-auto max-h-full w-full dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
                   </a>
-                  <button @click="submit(asset.id)" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> {{ asset.equipment_type}}</button>
+                  <button @click="submit_h(asset.id)" class="mt-4 font-medium text-gray-900 hover:underline dark:text-white sm:mt-0"> {{ asset.equipment_type}}</button>
                 </div>
 
                 <div class="mt-4 flex shrink-0 flex-col gap-2 sm:flex-row sm:justify-between md:items-center xl:mt-0 xl:flex-col xl:items-start">

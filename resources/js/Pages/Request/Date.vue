@@ -1,7 +1,7 @@
 <script setup>
 import MyLayout from '@/Layouts/MyLayout.vue';
 import {  usePage } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 const { props } = usePage();
 
@@ -12,17 +12,21 @@ import { createInertiaApp, Head, router, Link } from '@inertiajs/vue3';
         router.post(route('logout'));
     }
 
+    
+const date = ref('')
+const time = ref('')
     const form = reactive({
-  description_of_request: '',
-  ict_service_request_type_id: null,
-  ict_inventory_id: props.asset_id,
+  description_of_request: props.description_of_request,
+  ict_service_request_type_id: props.ict_service_request_type_id,
+  ict_inventory_id: props.ict_inventory_id,
   requested_by: props.auth.user.username,
-  date_requested: null,
+  date_requested: '',
+
 });
 
 // Function to submit the form
-function submit() {
-  router.post('/request/defect/date', form);
+function submit_f() {
+  router.post('/request/defect/date',form);
 }
 </script>
 <template>
@@ -180,7 +184,7 @@ function submit() {
         </ul>
       </aside>
       <!-- Right content -->
-      <form @submit.prevent="submit" class="w-full space-y-6 lg:space-y-8">
+      <form @submit.prevent="submit_f" class="w-full space-y-6 lg:space-y-8">
         <div class="space-y-6 sm:space-y-8">
           <ol class="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 sm:justify-center md:flex-row md:items-center lg:gap-6">
             <li class="flex items-center gap-2 md:flex-1 md:flex-col md:gap-1.5 lg:flex-none">
@@ -239,7 +243,7 @@ function submit() {
                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
               </svg>
             </div>
-              <input type="time"  id="datepicker-actions" datepicker datepicker-buttons datepicker-autoselect-today  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+              <input type="time"   id="datepicker-actions" datepicker datepicker-buttons datepicker-autoselect-today timepicker timepicker-buttons timepicker-autoselect-today  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
             </div>
 
 
@@ -254,7 +258,7 @@ function submit() {
       </button>
 
       <!-- Next Button -->
-    <button type="submit" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+    <button type="submit_f" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
         Next: Confirmation
     </button>
   

@@ -145,7 +145,7 @@ Route::get('/request' ,function(){
             
             
         ]);
-});
+})->name('request');
 
 Route::get('/profile' ,function(){
         return Inertia::render('Profile');
@@ -307,3 +307,32 @@ Route::post('/request/defect/date', [IctServiceRequestController::class, 'store'
 Route::get('/request/defect/date/confirmation',function(){
     return Inertia::render('Request/Confirmation');
 });
+
+Route::get('/request/my-request', function() {
+    return Inertia::render('Request/MyRequest' ,[
+            'assets_1' => IctServiceRequest::get()->map(
+                function ($inner){
+                    return [
+                        'requested_by' => $inner -> requested_by,
+                        'date_requested' => $inner -> date_requested,
+                        'date_completed' => $inner -> date_completed,
+                        'remarks' => $inner -> remarks,
+                        'date_needed' => $inner -> date_needed,
+                        'ict_technician_id' => $inner -> ict_technician ? ($inner->ict_technician->employee ? 
+                        $inner->ict_technician->employee->last_name . " " . $inner->ict_technician->employee->first_name 
+                        : 'No Employee Assigned') : 'No Technician Assigned',
+                        'request_type' => $inner -> requestType -> name,
+                        'description' => $inner -> description_of_request
+                        
+                    ];
+                }
+            ),'assets_2' => IctServiceRequest::all()
+            
+            
+        ]);
+})->name('my-request');
+
+Route::get('/request/reviews', function() {
+    return Inertia::render('Request/Reviews');
+})->name('reviews');
+

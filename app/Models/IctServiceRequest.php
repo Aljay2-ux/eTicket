@@ -33,7 +33,14 @@ class IctServiceRequest extends Model
         'ict_inventory_id',
     ];
 
-     
+     protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->date_requested = now(); // Automatically sets to current date and time
+        });
+    }
 
     public function requestType()
     {
@@ -44,7 +51,7 @@ class IctServiceRequest extends Model
         return $this->belongsto(IctInventory::class, 'ict_inventory_id');
     }
 
-    public function ict_technician_id(): BelongsTo {
+    public function ict_technician(): BelongsTo {
         return $this->belongsto(IctTechnician::class, 'ict_technician_id');
     }
 

@@ -36,7 +36,10 @@ class IctServiceRequestController extends Controller
             'ict_service_request_type_id' => 'required|exists:ict_service_request_types,id',
             'ict_inventory_id' => 'required|exists:ict_inventories,id',
             'requested_by' => 'required|required|exists:users,name',
-            'date_requested' => 'required|date',
+            'date_needed' => 'required|date',
+            'created_by' => 'required|exists:users,id',
+            // 'ict_technician_id' => 'required|exists:ict_technicians,id'
+
         ]);
 
         if ($validator->fails()) {

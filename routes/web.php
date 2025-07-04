@@ -130,7 +130,7 @@ Route::get('/users' ,function(){
 Route::post('/request/defct/date', [IctServiceRequest::class, 'store']);
 
 Route::get('/request' ,function(){
-        return Inertia::render('Request/RequestForm',[
+        return Inertia::render('Request/Index/RequestForm',[
             'assets' => IctInventory::get()->map(
                 function ($inner){
                     return [
@@ -157,7 +157,7 @@ Route::get('/status' ,function(){
 
 Route::get('/request/defect' ,function(Request $request){
     
-        return Inertia::render('Request/Defect',[
+        return Inertia::render('Request/Index/Defect',[
             'assets' => IctInventory::where("id", $request->input("asset_id")  ) ->get()->map(
                 function ($inner){
                     return [
@@ -213,7 +213,7 @@ Route::get('/request/defect/date', function (Request $request) {
         $assetData = null;
     }
 
-    return Inertia::render('Request/Date', [
+    return Inertia::render('Request/Index/Date', [
         'assets' => $assetData,
         'request_types' => IctServiceRequestType::all(),
         'ict_inventory_id' => $request->input("asset_id"),
@@ -305,7 +305,7 @@ Route::get('/request/defect/date', function (Request $request) {
 // Route::post('/request/defect', [IctServiceRequestController::class, 'store']);
 Route::post('/request/defect/date', [IctServiceRequestController::class, 'store']);
 Route::get('/request/defect/date/confirmation',function(){
-    return Inertia::render('Request/Confirmation');
+    return Inertia::render('Request/Index/Confirmation');
 });
 
 Route::get('/request/my-request', function() {
@@ -336,3 +336,29 @@ Route::get('/request/reviews', function() {
     return Inertia::render('Request/Reviews');
 })->name('reviews');
 
+Route::get('/request/try', function(){
+    return Inertia::render('Request/Try');
+});
+Route::get('/request/viewing', function() {
+    return Inertia::render('Request/Index/Viewing' ,[
+            'assets_1' => IctServiceRequest::get()->map(
+                function ($inner){
+                    return [
+                        'requested_by' => $inner -> requested_by,
+                        'date_requested' => $inner -> date_requested,
+                        'date_completed' => $inner -> date_completed,
+                        'remarks' => $inner -> remarks,
+                        'date_needed' => $inner -> date_needed,
+                        'ict_technician_id' => $inner -> ict_technician ? ($inner->ict_technician->employee ? 
+                        $inner->ict_technician->employee->last_name . " " . $inner->ict_technician->employee->first_name 
+                        : 'No Employee Assigned') : 'No Technician Assigned',
+                        'request_type' => $inner -> requestType -> name,
+                        'description' => $inner -> description_of_request
+                        
+                    ];
+                }
+            ),'assets_2' => IctServiceRequest::all()
+            
+            
+        ]);
+})->name('my-request');
